@@ -30,6 +30,9 @@ $grid-xs-bp-name: xs- !default;
 $grid-sm-bp-name: sm- !default;
 $grid-md-bp-name: md- !default;
 $grid-lg-bp-name: lg- !default;
+$grid-push-name: push- !default;
+$grid-pull-name: pull- !default;
+$grid-offset-name: offset- !default;
 
 // Clearfix mixin
 @mixin clearfix() {
@@ -66,31 +69,8 @@ $grid-lg-bp-name: lg- !default;
   @include clearfix();
 }
 
-// Sets the width of a column based on the columns index and its type ie
-// width, pull, offset, or push.
-@mixin calc-grid-column($index, $class, $type) {
-  @if ($type == width) and ($index > 0) {
-    .#{$grid-col-name}#{$class}#{$index} {
-      width: percentage(($index / $grid-columns));
-    }
-  }
-
-  @if ($type == push) and ($index > 0) {
-    .col-#{$class}-push-#{$index} {
-      left: percentage(($index / $grid-columns));
-    }
-  }
-}
-
-// Generates column classes
-@mixin loop-grid-columns($columns, $class, $type) {
-  @for $i from 0 through $columns {
-    @include calc-grid-column($i, $class, $type);
-  }
-}
-
-// Global rules for columns
-[class*='#{$grid-col-name}'] {
+// Shared rules for all columns
+%col {
   float: left;
   min-height: 1px;
   padding-left: $grid-gutter / 2;
@@ -98,7 +78,65 @@ $grid-lg-bp-name: lg- !default;
   position: relative;
 }
 
+// Sets the width of a column based on the columns index and its type ie
+// width, pull, offset, or push.
+@mixin calc-grid-column($index, $bp, $type) {
+  @if ($type == width) and ($index > 0) {
+    .#{$grid-col-name}#{$bp}#{$index} {
+      @extend %col;
+      width: percentage(($index / $grid-columns));
+    }
+  }
+
+  @if ($type == push) and ($index > 0) {
+    .#{$grid-col-name}#{$bp}#{$grid-push-name}#{$index} {
+      left: percentage(($index / $grid-columns));
+    }
+  }
+
+  @if ($type == push) and ($index == 0) {
+    .#{$grid-col-name}#{$bp}#{$grid-push-name}0 {
+      left: auto;
+    }
+  }
+
+  @if ($type == pull) and ($index > 0) {
+    .#{$grid-col-name}#{$bp}#{$grid-pull-name}#{$index} {
+      right: percentage(($index / $grid-columns));
+    }
+  }
+
+  @if ($type == pull) and ($index == 0) {
+    .#{$grid-col-name}#{$bp}#{$grid-pull-name}0 {
+      right: auto;
+    }
+  }
+
+  @if ($type == offset) {
+    .#{$grid-col-name}#{$bp}#{$grid-offset-name}#{$index} {
+      margin-left: percentage(($index / $grid-columns));
+    }
+  }
+}
+
+// Calculate column classes
+@mixin loop-grid-columns($columns, $bp, $type) {
+  @for $i from 0 through $columns {
+    @include calc-grid-column($i, $bp, $type);
+  }
+}
+
+// Generate width column classes for a breakpoint
 @include loop-grid-columns($grid-columns, $grid-sm-bp-name, width);
+
+// Generate push column classes for a breakpoint
+@include loop-grid-columns($grid-columns, $grid-sm-bp-name, push);
+
+// Generate pull column classes for a breakpoint
+@include loop-grid-columns($grid-columns, $grid-sm-bp-name, pull);
+
+// Generate offset column classes for a breakpoint
+@include loop-grid-columns($grid-columns, $grid-sm-bp-name, offset);
 
 // TODO - later be part of optional generated CSS
 html {
