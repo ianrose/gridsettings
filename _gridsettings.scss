@@ -3,7 +3,7 @@
 // ==============================================================================
 // Gridsettings
 // ==============================================================================
-// A Sass toolkit that sets creates responsive grids.
+// A Sass toolkit that creates responsive grids.
 //
 // Release Versions: https://github.com/ianrose/gridsettings/releases
 // Github: https://github.com/ianrose/gridsettings
@@ -13,7 +13,7 @@
 // https://github.com/twbs/bootstrap-sass
 // https://github.com/kristoferjoseph/flexboxgrid
 
-// Breakpoints
+// Breakpoints TODO - Provide ability to generate any number of breakpoints
 $screen-xs-min: 480px !default;
 $screen-sm-min: 768px !default;
 $screen-md-min: 992px !default;
