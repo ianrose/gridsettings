@@ -33,6 +33,12 @@ $grid-lg-bp-name: lg- !default;
 $grid-push-name: push- !default;
 $grid-pull-name: pull- !default;
 $grid-offset-name: offset- !default;
+$grid-container-name: container !default;
+$grid-container-gutter-name: #{$grid-container-name}-gutter !default;
+$container-sm-width: 750px !default;
+$container-sm-width: 750px !default;
+$container-md-width: 970px !default;
+$container-lg-width: 1200px !default;
 
 // Clearfix mixin
 @mixin clearfix() {
@@ -70,8 +76,7 @@ $grid-offset-name: offset- !default;
 }
 
 // Shared rules for all columns
-%col {
-  float: left;
+[class*='#{$grid-col-name}'] {
   min-height: 1px;
   padding-left: $grid-gutter / 2;
   padding-right: $grid-gutter / 2;
@@ -83,7 +88,6 @@ $grid-offset-name: offset- !default;
 @mixin calc-grid-column($index, $bp, $type) {
   @if ($type == width) and ($index > 0) {
     .#{$grid-col-name}#{$bp}#{$index} {
-      @extend %col;
       width: percentage(($index / $grid-columns));
     }
   }
@@ -112,10 +116,27 @@ $grid-offset-name: offset- !default;
     }
   }
 
-  @if ($type == offset) {
+  @if ($type == offset) and ($index > 0) {
     .#{$grid-col-name}#{$bp}#{$grid-offset-name}#{$index} {
       margin-left: percentage(($index / $grid-columns));
     }
+  } @else if ($type == offset) and ($index == 0) {
+    .#{$grid-col-name}#{$bp}#{$grid-offset-name}#{$index} {
+      margin-left: ($index / $grid-columns);
+    }
+  }
+}
+
+// Float the column class based on breakpoint
+@mixin float-grid-columns($bp) {
+  $list: '';
+  $i: 1;
+  $list: ".#{$grid-col-name}#{$bp}#{$i}";
+  @for $i from (1 + 1) through $grid-columns {
+    $list: "#{$list}, .#{$grid-col-name}#{$bp}#{$i}";
+  }
+  #{$list} {
+    float: left;
   }
 }
 
@@ -126,19 +147,40 @@ $grid-offset-name: offset- !default;
   }
 }
 
-// Generate width column classes for a breakpoint
-@include loop-grid-columns($grid-columns, $grid-sm-bp-name, width);
+// Make a grid based on breakpoint
+@mixin make-grid($bp) {
+  // Generate width column classes for a breakpoint
+  @include loop-grid-columns($grid-columns, $bp, width);
 
-// Generate push column classes for a breakpoint
-@include loop-grid-columns($grid-columns, $grid-sm-bp-name, push);
+  // Float columns for specified breakpoint and up
+  @include float-grid-columns($bp);
 
-// Generate pull column classes for a breakpoint
-@include loop-grid-columns($grid-columns, $grid-sm-bp-name, pull);
+  // Generate push column classes for a breakpoint
+  @include loop-grid-columns($grid-columns, $bp, push);
 
-// Generate offset column classes for a breakpoint
-@include loop-grid-columns($grid-columns, $grid-sm-bp-name, offset);
+  // Generate pull column classes for a breakpoint
+  @include loop-grid-columns($grid-columns, $bp, pull);
+
+  // Generate offset column classes for a breakpoint
+  @include loop-grid-columns($grid-columns, $bp, offset);
+}
 
 // TODO - later be part of optional generated CSS
+
+@include make-grid($grid-xs-bp-name);
+
+@media (min-width: $screen-sm-min) {
+  @include make-grid($grid-sm-bp-name);
+}
+
+@media (min-width: $screen-md-min) {
+  @include make-grid($grid-md-bp-name);
+}
+
+@media (min-width: $screen-lg-min) {
+  @include make-grid($grid-lg-bp-name);
+}
+
 html {
   box-sizing: border-box;
 }
@@ -149,7 +191,7 @@ html {
   box-sizing: inherit;
 }
 
-.container-gutter {
+.#{$grid-container-gutter-name} {
   @include make-container-gutter();
 }
 
@@ -157,8 +199,18 @@ html {
   @include make-container();
 }
 
-.container {
+.#{$grid-container-name} {
   @include make-container();
+
+  @media (min-width: $screen-sm-min) {
+    width: $container-sm-width;
+  }
+  @media (min-width: $screen-md-min) {
+    width: $container-md-width;
+  }
+  @media (min-width: $screen-lg-min) {
+    width: $container-lg-width;
+  }
 }
 
 .row {
