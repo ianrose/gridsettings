@@ -32,6 +32,9 @@ module.exports = function (grunt) {
       }
     },
     sass: {
+      options: {
+        sourceMap: true
+      },
       dist: {
         files: {
           'test/test.css': 'test/test.scss'
@@ -62,7 +65,8 @@ module.exports = function (grunt) {
           livereload: LIVERELOAD_PORT
         },
         files: [
-          'test/*.html'
+          'test/*.html',
+          'test/*.css'
         ]
       }
     }

@@ -2,7 +2,7 @@
   "important": true,
   "adjoining-classes": true,
   "known-properties": true,
-  "box-sizing": true,
+  "box-sizing": false,
   "box-model": true,
   "overqualified-elements": true,
   "display-property-grouping": true,
@@ -27,11 +27,11 @@
   "rules-count": true,
   "qualified-headings": true,
   "selector-max": true,
-  "shorthand": true,
+  "shorthand": false,
   "text-indent": true,
   "unique-headings": false,
-  "universal-selector": true,
-  "unqualified-attributes": true,
+  "universal-selector": false,
+  "unqualified-attributes": false,
   "vendor-prefix": true,
   "zero-units": true
 }

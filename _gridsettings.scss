@@ -10,5 +10,119 @@
 // License: The MIT License (MIT)
 //
 // Inspired by and used stuff from:
-// https://github.com/typeplate/typeplate.github.io
-// https://github.com/csswizardry/typecsset
+// https://github.com/twbs/bootstrap-sass
+// https://github.com/kristoferjoseph/flexboxgrid
+
+// Breakpoints
+$screen-xs-min: 480px !default;
+$screen-sm-min: 768px !default;
+$screen-md-min: 992px !default;
+$screen-lg-min: 1230px !default;
+$screen-xs-max: ($screen-sm-min -1);
+$screen-sm-max: ($screen-md-min - 1);
+$screen-md-max: ($screen-lg-min - 1);
+
+// Grid attributes
+$grid-gutter: 20px !default;
+$grid-columns: 12 !default;
+$grid-col-name: col- !default;
+$grid-xs-bp-name: xs- !default;
+$grid-sm-bp-name: sm- !default;
+$grid-md-bp-name: md- !default;
+$grid-lg-bp-name: lg- !default;
+
+// Clearfix mixin
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// Optional Provides a for overall content. If bleed is desired don't wrap
+// content in a "container-gutter"
+@mixin make-container-gutter($gutter: $grid-gutter) {
+  margin-left: $gutter / 2;
+  margin-right: $gutter / 2;
+}
+
+// Centers the "container" on the page and clears floats.
+@mixin make-container() {
+  margin-right: auto;
+  margin-left: auto;
+  @include clearfix();
+}
+
+// Creates a wrapper for a series of columns and with negative margin allows
+// first and last column to be flush left and right of container. Clears
+// "column" floats.
+@mixin make-row($gutter: $grid-gutter) {
+  margin-left: ($gutter / -2);
+  margin-right: ($gutter / -2);
+  @include clearfix();
+}
+
+// Sets the width of a column based on the columns index and its type ie
+// width, pull, offset, or push.
+@mixin calc-grid-column($index, $class, $type) {
+  @if ($type == width) and ($index > 0) {
+    .#{$grid-col-name}#{$class}#{$index} {
+      width: percentage(($index / $grid-columns));
+    }
+  }
+
+  @if ($type == push) and ($index > 0) {
+    .col-#{$class}-push-#{$index} {
+      left: percentage(($index / $grid-columns));
+    }
+  }
+}
+
+// Generates column classes
+@mixin loop-grid-columns($columns, $class, $type) {
+  @for $i from 0 through $columns {
+    @include calc-grid-column($i, $class, $type);
+  }
+}
+
+// Global rules for columns
+[class*='#{$grid-col-name}'] {
+  float: left;
+  min-height: 1px;
+  padding-left: $grid-gutter / 2;
+  padding-right: $grid-gutter / 2;
+  position: relative;
+}
+
+@include loop-grid-columns($grid-columns, $grid-sm-bp-name, width);
+
+// TODO - later be part of optional generated CSS
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.container-gutter {
+  @include make-container-gutter();
+}
+
+.container-fluid {
+  @include make-container();
+}
+
+.container {
+  @include make-container();
+}
+
+.row {
+  @include make-row();
+}
