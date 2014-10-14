@@ -25,6 +25,7 @@ $screen-md-max: ($screen-lg-min - 1);
 // Grid attributes
 $grid-gutter: 20px !default;
 $grid-columns: 12 !default;
+$col-rail-width: 300px !default;
 $grid-col-name: col- !default;
 $grid-xs-bp-name: xs- !default;
 $grid-sm-bp-name: sm- !default;
@@ -210,6 +211,42 @@ html {
   }
   @media (min-width: $screen-lg-min) {
     width: $container-lg-width;
+  }
+}
+
+.col-static {
+  width: $col-rail-width + $grid-gutter;
+}
+
+.static-right {
+  .fluid-wrapper {
+    float: left;
+    width: 100%;
+  }
+
+  .col-main {
+    margin-right: $col-rail-width + $grid-gutter;
+  }
+
+  .col-static {
+    float: left;
+    margin-left: ($col-rail-width + $grid-gutter) * -1;
+  }
+}
+
+.static-left {
+  .fluid-wrapper {
+    float: right;
+    width: 100%;
+  }
+
+  .col-main {
+    margin-left: $col-rail-width + $grid-gutter;
+  }
+
+  .col-static {
+    float: right;
+    margin-right: ($col-rail-width + $grid-gutter) * -1;
   }
 }
 

@@ -515,6 +515,27 @@ html {
     .container {
       width: 1200px; } }
 
+.col-static {
+  width: 320px; }
+
+.static-right .fluid-wrapper {
+  float: left;
+  width: 100%; }
+.static-right .col-main {
+  margin-right: 320px; }
+.static-right .col-static {
+  float: left;
+  margin-left: -320px; }
+
+.static-left .fluid-wrapper {
+  float: right;
+  width: 100%; }
+.static-left .col-main {
+  margin-left: 320px; }
+.static-left .col-static {
+  float: right;
+  margin-right: -320px; }
+
 .row {
   margin-left: -10px;
   margin-right: -10px; }
