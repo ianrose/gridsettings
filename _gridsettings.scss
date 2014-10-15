@@ -23,9 +23,9 @@ $screen-sm-max: ($screen-md-min - 1);
 $screen-md-max: ($screen-lg-min - 1);
 
 // Grid attributes
-$grid-gutter: 20px !default;
+$grid-gutter: 12px !default;
 $grid-columns: 12 !default;
-$col-rail-width: 300px !default;
+$static-col-width: 300px !default;
 $grid-col-name: col- !default;
 $grid-xs-bp-name: xs- !default;
 $grid-sm-bp-name: sm- !default;
@@ -166,20 +166,64 @@ $container-lg-width: 1200px !default;
   @include loop-grid-columns($grid-columns, $bp, offset);
 }
 
+@mixin make-static-fluid($bp) {
+  .#{$grid-col-name}#{$bp}static {
+    width: $static-col-width + $grid-gutter;
+  }
+
+  .fluid-#{$bp}wrapper {
+    width: 100%;
+  }
+
+  .static-right .fluid-#{$bp}wrapper {
+    float: left;
+  }
+
+  .static-left .fluid-#{$bp}wrapper {
+    float: right;
+  }
+
+  .static-right {
+    .#{$grid-col-name}#{$bp}fluid {
+      margin-right: $static-col-width + $grid-gutter;
+    }
+
+    .#{$grid-col-name}#{$bp}static {
+      float: left;
+      margin-left: ($static-col-width + $grid-gutter) * -1;
+    }
+  }
+
+  .static-left {
+    .#{$grid-col-name}#{$bp}fluid {
+      margin-left: $static-col-width + $grid-gutter;
+    }
+
+    .#{$grid-col-name}#{$bp}static {
+      float: right;
+      margin-right: ($static-col-width + $grid-gutter) * -1;
+    }
+  }
+}
+
 // TODO - later be part of optional generated CSS
 
 @include make-grid($grid-xs-bp-name);
+@include make-static-fluid($grid-xs-bp-name);
 
 @media (min-width: $screen-sm-min) {
   @include make-grid($grid-sm-bp-name);
+  @include make-static-fluid($grid-sm-bp-name);
 }
 
 @media (min-width: $screen-md-min) {
   @include make-grid($grid-md-bp-name);
+  @include make-static-fluid($grid-md-bp-name);
 }
 
 @media (min-width: $screen-lg-min) {
   @include make-grid($grid-lg-bp-name);
+  @include make-static-fluid($grid-lg-bp-name);
 }
 
 html {
@@ -211,42 +255,6 @@ html {
   }
   @media (min-width: $screen-lg-min) {
     width: $container-lg-width;
-  }
-}
-
-.col-static {
-  width: $col-rail-width + $grid-gutter;
-}
-
-.static-right {
-  .fluid-wrapper {
-    float: left;
-    width: 100%;
-  }
-
-  .col-main {
-    margin-right: $col-rail-width + $grid-gutter;
-  }
-
-  .col-static {
-    float: left;
-    margin-left: ($col-rail-width + $grid-gutter) * -1;
-  }
-}
-
-.static-left {
-  .fluid-wrapper {
-    float: right;
-    width: 100%;
-  }
-
-  .col-main {
-    margin-left: $col-rail-width + $grid-gutter;
-  }
-
-  .col-static {
-    float: right;
-    margin-right: ($col-rail-width + $grid-gutter) * -1;
   }
 }
 
