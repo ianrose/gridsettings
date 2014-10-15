@@ -36,6 +36,7 @@ $grid-push-name: push- !default;
 $grid-pull-name: pull- !default;
 $grid-offset-name: offset- !default;
 $grid-container-name: container !default;
+$grid-row-name: row !default;
 $grid-container-gutter-name: #{$grid-container-name}-gutter !default;
 $container-sm-width: 750px !default;
 $container-sm-width: 750px !default;
@@ -241,7 +242,7 @@ html {
   @include make-container-gutter();
 }
 
-.container-fluid {
+.#{$grid-container-name}fluid {
   @include make-container();
 }
 
@@ -259,6 +260,6 @@ html {
   }
 }
 
-.row {
+.#{$grid-row-name} {
   @include make-row();
 }
