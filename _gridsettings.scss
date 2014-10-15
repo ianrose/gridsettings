@@ -26,6 +26,7 @@ $screen-md-max: ($screen-lg-min - 1);
 $grid-gutter: 12px !default;
 $grid-columns: 12 !default;
 $static-col-width: 300px !default;
+$static-col-name: static !default;
 $grid-col-name: col- !default;
 $grid-xs-bp-name: xs- !default;
 $grid-sm-bp-name: sm- !default;
@@ -117,13 +118,13 @@ $container-lg-width: 1200px !default;
     }
   }
 
-  @if ($type == offset) and ($index > 0) {
+  @if ($type == offset) {
     .#{$grid-col-name}#{$bp}#{$grid-offset-name}#{$index} {
-      margin-left: percentage(($index / $grid-columns));
-    }
-  } @else if ($type == offset) and ($index == 0) {
-    .#{$grid-col-name}#{$bp}#{$grid-offset-name}#{$index} {
-      margin-left: ($index / $grid-columns);
+      @if ($index > 0) {
+        margin-left: percentage(($index / $grid-columns));
+      } @else if ($index == 0) {
+        margin-left: ($index / $grid-columns);
+      }
     }
   }
 }
@@ -167,7 +168,7 @@ $container-lg-width: 1200px !default;
 }
 
 @mixin make-static-fluid($bp) {
-  .#{$grid-col-name}#{$bp}static {
+  .#{$grid-col-name}#{$bp}#{$static-col-name} {
     width: $static-col-width + $grid-gutter;
   }
 
@@ -188,7 +189,7 @@ $container-lg-width: 1200px !default;
       margin-right: $static-col-width + $grid-gutter;
     }
 
-    .#{$grid-col-name}#{$bp}static {
+    .#{$grid-col-name}#{$bp}#{$static-col-name} {
       float: left;
       margin-left: ($static-col-width + $grid-gutter) * -1;
     }
@@ -199,7 +200,7 @@ $container-lg-width: 1200px !default;
       margin-left: $static-col-width + $grid-gutter;
     }
 
-    .#{$grid-col-name}#{$bp}static {
+    .#{$grid-col-name}#{$bp}#{$static-col-name} {
       float: right;
       margin-right: ($static-col-width + $grid-gutter) * -1;
     }
