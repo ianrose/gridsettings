@@ -1,0 +1,55 @@
+// Grid Type
+$float-grid: false;
+$flexbox-grid: true;
+
+// Breakpoints
+$screen-xs-min: 480px;
+$screen-sm-min: 768px;
+$screen-md-min: 992px;
+$screen-lg-min: 1230px;
+$screen-xs-max: ($screen-sm-min -1);
+$screen-sm-max: ($screen-md-min - 1);
+$screen-md-max: ($screen-lg-min - 1);
+
+// Grid attributes
+$grid-gutter: 12px;
+$grid-columns: 12;
+$static-col-width: 300px;
+$static-col-name: static;
+$grid-col-name: col-;
+$grid-xs-bp-name: xs-;
+$grid-sm-bp-name: sm-;
+$grid-md-bp-name: md-;
+$grid-lg-bp-name: lg-;
+$grid-push-name: push-;
+$grid-pull-name: pull-;
+$grid-offset-name: offset-;
+$grid-container-name: container;
+$grid-row-name: row;
+$grid-container-gutter-name: #{$grid-container-name}-gutter;
+$container-sm-width: 750px;
+$container-sm-width: 750px;
+$container-md-width: 970px;
+$container-lg-width: 1200px;
+
+@import "../gridsettings";
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+}
+
+.content {
+  background-color: #2079b2;
+  color: #fff;
+  padding-bottom: 1em;
+  padding-top: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  text-align: center;
+}
+
+.row {
+  margin-bottom: $grid-gutter;
+}
+
