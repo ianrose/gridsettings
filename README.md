@@ -1,13 +1,13 @@
 Gridsettings
 ============
 
-Create either float based grids or flexbox based grids using Sass. **Why create another grid toolkit in Sass?** I wanted to and I couldn't find exactly what I was looking for. Gridsettings uses techniques from many different amazing tools and tries to keep usage similar to other systems.
+Create either float based grids or flexbox based grids using Sass. **Why create another grid toolkit in Sass?** I wanted to and I couldn't find exactly what I was looking for. Gridsettings uses techniques from many amazing tools and tries to keep usage similar to other systems.
 
  * Its only dependency is Sass
  * It uses percentage columns within a fixed width or fluid width container
  * It generates all classes based on column number and breakpoints
  * It allows you to customize grid class names
- * It provides to the ability of having static width column among fluid, even in a float based grid
+ * It provides the ability of having static width column among fluid, even in a float based grid
  * It has optional default mobile first grid settings
 
 ## How to setup
