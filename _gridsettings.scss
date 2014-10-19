@@ -14,8 +14,8 @@
 // https://github.com/kristoferjoseph/flexboxgrid
 
 // Grid Type
-$float-grid: false !default;
-$flexbox-grid: true !default;
+$float-grid: true !default;
+$flexbox-grid: false !default;
 
 // Breakpoints TODO - Provide ability to generate any number of breakpoints
 $screen-xs-min: 480px !default;
