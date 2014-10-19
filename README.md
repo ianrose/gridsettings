@@ -1,13 +1,14 @@
 Gridsettings
 ============
 
-Create either float based grids or flexbox based grids using Sass. **Why create another grid toolkit in Sass?** I wanted to and I couldn't find exactly what I was looking for. Gridsettings uses techniques from many different amazing tools and tries to keep usage similar to other grid systems.
+Create either float based grids or flexbox based grids using Sass. **Why create another grid toolkit in Sass?** I wanted to and I couldn't find exactly what I was looking for. Gridsettings uses techniques from many different amazing tools and tries to keep usage similar to other systems.
 
  * Its only dependency is Sass
  * It uses percentage columns within a fixed width or fluid width container
  * It generates all classes based on column number and breakpoints
+ * It allows you to customize grid class names
  * It provides to the ability of having static width column among fluid, even in a float based grid
- * It has optional default mobile frist grid settings
+ * It has optional default mobile first grid settings
 
 ## How to setup
 
@@ -20,28 +21,61 @@ There are three ways you can download Gridsettings.
 To start using Gridsettings `@import` the `_gridsettings.scss` partial into your Sass project after your CSS reset.
 
 ```scss
- @import "path/your-reset";
+@import "path/your-reset";
 
- // Your settings for Gridsettings :)
-// Grid Type $float-grid: false; $flexbox-grid: true; 
-// Breakpoints $screen-xs-min: 480px; $screen-sm-min: 768px; $screen-md-min: 992px; $screen-lg-min: 1230px;  // Grid attributes $grid-gutter: 12px; $grid-columns: 12; $static-col-width: 300px; $static-col-name: static; $grid-col-name: col-; $grid-xs-bp-name: xs-; $grid-sm-bp-name: sm-; $grid-md-bp-name: md-; $grid-lg-bp-name: lg-; $grid-push-name: push-; $grid-pull-name: pull-; $grid-offset-name: offset-; $grid-container-name: container; $grid-row-name: row; $grid-container-gutter-name: #{$grid-container-name}-gutter; $container-sm-width: 750px; $container-sm-width: 750px; $container-md-width: 970px; $container-lg-width: 1200px;
+// Your settings for Gridsettings :)
+// Grid Type 
+$float-grid: false; 
+$flexbox-grid: true; 
 
- @import "path/gridsettings"; // Here is the _gridsettings.scss partial
+// Breakpoints
+ $screen-xs-min: 480px;
+ $screen-sm-min: 768px;
+ $screen-md-min: 992px; 
+$screen-lg-min: 1230px;  
 
- @import "path/your-styles";
+// Grid attributes
+ $grid-gutter: 12px; 
+$grid-columns: 12;
+ $static-col-width: 300px;
+ $static-col-name: static;
+ $grid-col-name: col-; 
+$grid-xs-bp-name: xs-; 
+$grid-sm-bp-name: sm-;
+ $grid-md-bp-name: md-; 
+$grid-lg-bp-name: lg-; 
+$grid-push-name: push-; 
+$grid-pull-name: pull-; 
+$grid-offset-name: offset-;
+ $grid-container-name: container; 
+$grid-row-name: row; 
+$grid-container-gutter-name: #{$grid-container-name}-gutter;
+ $container-sm-width: 750px;
+ $container-sm-width: 750px;
+ $container-md-width: 970px;
+ $container-lg-width: 1200px;
+
+@import "path/gridsettings"; // Here is the _gridsettings.scss partial
+
+@import "path/your-styles";
 ```
 
 ## How to use
-
-After Gridsettings is setup in your project the default type styles should be looking good. However I bet you want to use modular scale and vertical rhythm in the rest of your project. Here is an example of how to do that:
 
 The HTML:
 
 ```html
 <div class="container-gutter">
   <div class="container">
-     <!-- Two 6/12 columns -->
-    <div class="row">       <div class="col-xs-6">         <div class="content">Content-</div>       </div>       <div class="col-xs-6">         <div class="content">Content</div>       </div>     </div>
+    <!-- Two 6/12 columns -->
+    <div class="row"> 
+      <div class="col-xs-6"> 
+        <div class="content">Content-</div>
+      </div>
+      <div class="col-xs-6"> 
+        <div class="content">Content</div>
+      </div>
+    </div>
   </div>
 </div>
 ```
