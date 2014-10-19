@@ -1,8 +1,8 @@
 @charset "UTF-8";
 
-// ==============================================================================
+// =============================================================================
 // Gridsettings
-// ==============================================================================
+// =============================================================================
 // A Sass toolkit that creates responsive grids.
 //
 // Release Versions: https://github.com/ianrose/gridsettings/releases
@@ -13,14 +13,18 @@
 // https://github.com/twbs/bootstrap-sass
 // https://github.com/kristoferjoseph/flexboxgrid
 
+// Grid Type
+$float-grid: false !default;
+$flexbox-grid: true !default;
+
 // Breakpoints TODO - Provide ability to generate any number of breakpoints
 $screen-xs-min: 480px !default;
 $screen-sm-min: 768px !default;
 $screen-md-min: 992px !default;
 $screen-lg-min: 1230px !default;
-$screen-xs-max: ($screen-sm-min -1);
-$screen-sm-max: ($screen-md-min - 1);
-$screen-md-max: ($screen-lg-min - 1);
+$screen-xs-max: ($screen-sm-min -1) !default;
+$screen-sm-max: ($screen-md-min - 1) !default;
+$screen-md-max: ($screen-lg-min - 1) !default;
 
 // Grid attributes
 $grid-gutter: 12px !default;
@@ -66,7 +70,9 @@ $container-lg-width: 1200px !default;
 @mixin make-container() {
   margin-right: auto;
   margin-left: auto;
-  @include clearfix();
+  @if ($float-grid) {
+    @include clearfix();
+  }
 }
 
 // Creates a wrapper for a series of columns and with negative margin allows
@@ -75,15 +81,53 @@ $container-lg-width: 1200px !default;
 @mixin make-row($gutter: $grid-gutter) {
   margin-left: ($gutter / -2);
   margin-right: ($gutter / -2);
-  @include clearfix();
+  @if ($float-grid) {
+    @include clearfix();
+  } @else if ($flexbox-grid) {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
 }
 
 // Shared rules for all columns
 [class*='#{$grid-col-name}'] {
-  min-height: 1px;
+  position: relative;
   padding-left: $grid-gutter / 2;
   padding-right: $grid-gutter / 2;
-  position: relative;
+  @if ($float-grid) {
+    min-height: 1px;
+  } @else if ($flexbox-grid) {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+  } @else {
+      @warn "Grid type undefined";
+  }
 }
 
 // Sets the width of a column based on the columns index and its type ie
@@ -91,7 +135,16 @@ $container-lg-width: 1200px !default;
 @mixin calc-grid-column($index, $bp, $type) {
   @if ($type == width) and ($index > 0) {
     .#{$grid-col-name}#{$bp}#{$index} {
-      width: percentage(($index / $grid-columns));
+      @if($float-grid){
+        width: percentage(($index / $grid-columns));
+      } @else if ($flexbox-grid) {
+        -webkit-flex-basis: percentage(($index / $grid-columns));
+        -ms-flex-preferred-size: percentage(($index / $grid-columns));
+        flex-basis: percentage(($index / $grid-columns));
+        max-width: percentage(($index / $grid-columns));
+      } @else {
+          @warn "Grid type undefined";
+      }
     }
   }
 
@@ -132,14 +185,16 @@ $container-lg-width: 1200px !default;
 
 // Float the column class based on breakpoint
 @mixin float-grid-columns($bp) {
-  $list: '';
-  $i: 1;
-  $list: ".#{$grid-col-name}#{$bp}#{$i}";
-  @for $i from (1 + 1) through $grid-columns {
-    $list: "#{$list}, .#{$grid-col-name}#{$bp}#{$i}";
-  }
-  #{$list} {
-    float: left;
+  @if ($float-grid) {
+    $list: '';
+    $i: 1;
+    $list: ".#{$grid-col-name}#{$bp}#{$i}";
+    @for $i from (1 + 1) through $grid-columns {
+      $list: "#{$list}, .#{$grid-col-name}#{$bp}#{$i}";
+    }
+    #{$list} {
+      float: left;
+    }
   }
 }
 
@@ -210,6 +265,16 @@ $container-lg-width: 1200px !default;
 
 // TODO - later be part of optional generated CSS
 
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
 @include make-grid($grid-xs-bp-name);
 @include make-static-fluid($grid-xs-bp-name);
 
@@ -226,16 +291,6 @@ $container-lg-width: 1200px !default;
 @media (min-width: $screen-lg-min) {
   @include make-grid($grid-lg-bp-name);
   @include make-static-fluid($grid-lg-bp-name);
-}
-
-html {
-  box-sizing: border-box;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
 }
 
 .#{$grid-container-gutter-name} {
