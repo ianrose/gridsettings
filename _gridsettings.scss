@@ -29,6 +29,7 @@ $screen-md-max: ($screen-lg-min - 1) !default;
 // Grid attributes
 $grid-gutter: 12px !default;
 $grid-columns: 12 !default;
+$grid-xs-gutter: ($grid-gutter / 2) !default;
 $static-col-width: 300px !default;
 $static-col-name: static !default;
 $grid-col-name: col- !default;
@@ -59,17 +60,12 @@ $container-lg-width: 1200px !default;
   }
 }
 
-// Optional Provides a for overall content. If bleed is desired don't wrap
-// content in a "container-gutter"
-@mixin make-container-gutter($gutter: $grid-gutter) {
-  margin-left: $gutter / 2;
-  margin-right: $gutter / 2;
-}
-
 // Centers the "container" on the page and clears floats.
-@mixin make-container() {
+@mixin make-container($gutter) {
   margin-right: auto;
   margin-left: auto;
+  padding-left: $gutter / 2;
+  padding-right: $gutter / 2;
   @if ($float-grid) {
     @include clearfix();
   }
@@ -78,7 +74,9 @@ $container-lg-width: 1200px !default;
 // Creates a wrapper for a series of columns and with negative margin allows
 // first and last column to be flush left and right of container. Clears
 // "column" floats.
-@mixin make-row($gutter: $grid-gutter) {
+@mixin make-row($gutter) {
+  $flexbox-grid: false;
+  $float-grid: true;
   margin-left: ($gutter / -2);
   margin-right: ($gutter / -2);
   @if ($float-grid) {
@@ -100,17 +98,25 @@ $container-lg-width: 1200px !default;
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-  }
+  } @else {
+  @warn "Grid type undefined";
+}
 }
 
 // Shared rules for all columns
 [class*='#{$grid-col-name}'] {
+  $flexbox-grid: false;
+  $float-grid: true;
   position: relative;
-  padding-left: $grid-gutter / 2;
-  padding-right: $grid-gutter / 2;
-  @if ($float-grid) {
+  padding-left: $grid-xs-gutter / 2;
+  padding-right: $grid-xs-gutter / 2;
+  @media (min-width: $screen-sm-min) {
+    padding-left: $grid-gutter / 2;
+    padding-right: $grid-gutter / 2;
+  }
+  @if $float-grid {
     min-height: 1px;
-  } @else if ($flexbox-grid) {
+  } @else if $flexbox-grid {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -141,6 +147,8 @@ $container-lg-width: 1200px !default;
 // Sets the width of a column based on the columns index and its type ie
 // width, pull, offset, or push.
 @mixin calc-grid-column($index, $bp, $type) {
+  $flexbox-grid: false;
+  $float-grid: true;
   @if ($type == width) and ($index > 0) {
     .#{$grid-col-name}#{$bp}#{$index} {
       @if($float-grid){
@@ -193,6 +201,8 @@ $container-lg-width: 1200px !default;
 
 // Float the column class based on breakpoint
 @mixin float-grid-columns($bp) {
+  $flexbox-grid: false;
+  $float-grid: true;
   @if ($float-grid) {
     $list: '';
     $i: 1;
@@ -231,9 +241,9 @@ $container-lg-width: 1200px !default;
   @include loop-grid-columns($grid-columns, $bp, offset);
 }
 
-@mixin make-static-fluid($bp) {
+@mixin make-static-fluid($bp, $gutter) {
   .#{$grid-col-name}#{$bp}#{$static-col-name} {
-    width: $static-col-width + $grid-gutter;
+    width: $static-col-width + $gutter;
   }
 
   .fluid-#{$bp}wrapper {
@@ -250,23 +260,24 @@ $container-lg-width: 1200px !default;
 
   .static-right {
     .#{$grid-col-name}#{$bp}fluid {
-      margin-right: $static-col-width + $grid-gutter;
+      margin-right: $static-col-width + $gutter;
+
     }
 
     .#{$grid-col-name}#{$bp}#{$static-col-name} {
       float: left;
-      margin-left: ($static-col-width + $grid-gutter) * -1;
+      margin-left: ($static-col-width + $gutter) * -1;
     }
   }
 
   .static-left {
     .#{$grid-col-name}#{$bp}fluid {
-      margin-left: $static-col-width + $grid-gutter;
+      margin-left: $static-col-width + $gutter;
     }
 
     .#{$grid-col-name}#{$bp}#{$static-col-name} {
       float: right;
-      margin-right: ($static-col-width + $grid-gutter) * -1;
+      margin-right: ($static-col-width + $gutter) * -1;
     }
   }
 }
@@ -284,36 +295,33 @@ html {
 }
 
 @include make-grid($grid-xs-bp-name);
-@include make-static-fluid($grid-xs-bp-name);
+@include make-static-fluid($grid-xs-bp-name, $grid-xs-gutter);
 
 @media (min-width: $screen-sm-min) {
   @include make-grid($grid-sm-bp-name);
-  @include make-static-fluid($grid-sm-bp-name);
+  @include make-static-fluid($grid-sm-bp-name, $grid-gutter);
 }
 
 @media (min-width: $screen-md-min) {
   @include make-grid($grid-md-bp-name);
-  @include make-static-fluid($grid-md-bp-name);
+  @include make-static-fluid($grid-md-bp-name, $grid-gutter);
 }
 
 @media (min-width: $screen-lg-min) {
   @include make-grid($grid-lg-bp-name);
-  @include make-static-fluid($grid-lg-bp-name);
-}
-
-.#{$grid-container-gutter-name} {
-  @include make-container-gutter();
+  @include make-static-fluid($grid-lg-bp-name, $grid-gutter);
 }
 
 .#{$grid-container-name}fluid {
-  @include make-container();
+  @include make-container($grid-gutter);
 }
 
 .#{$grid-container-name} {
-  @include make-container();
+  @include make-container($grid-xs-gutter);
 
   @media (min-width: $screen-sm-min) {
     width: $container-sm-width;
+    @include make-container($grid-gutter);
   }
   @media (min-width: $screen-md-min) {
     width: $container-md-width;
@@ -324,5 +332,23 @@ html {
 }
 
 .#{$grid-row-name} {
-  @include make-row();
+  @include make-row($grid-xs-gutter);
+
+  @media (min-width: $screen-sm-min) {
+    @include make-row($grid-gutter);
+  }
+}
+
+.bleed-l {
+  margin-left: $grid-xs-gutter / -2;
+  @media (min-width: $screen-sm-min) {
+    margin-left: $grid-gutter / -2;
+  }
+}
+
+.bleed-r {
+  margin-right: $grid-xs-gutter / -2;
+  @media (min-width: $screen-sm-min) {
+    margin-right: $grid-gutter / -2;
+  }
 }
