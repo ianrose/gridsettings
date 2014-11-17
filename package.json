@@ -9,7 +9,7 @@
     "grunt-contrib-connect": "^0.8.0",
     "grunt-contrib-csslint": "^0.3.1",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-sass": "^0.14.0"
+    "grunt-sass": "^0.16.1"
   },
   "repository": {
     "type": "git",
