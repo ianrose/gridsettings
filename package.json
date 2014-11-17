@@ -1,6 +1,6 @@
 {
   "name": "gridsettings",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Sass toolkit that creates responsive grids",
   "main": "_gridsettings.scss",
   "devDependencies": {
