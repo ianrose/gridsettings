@@ -222,7 +222,8 @@ $container-lg-width: 1170px !default;
 @mixin make-grid-pad($bp, $pad) {
   $bp: str-replace($bp, '-', '');
   .#{$grid-pad-name}#{$bp} {
-    padding: $pad;
+    padding-left: $pad;
+    padding-right: $pad;
   }
 }
 

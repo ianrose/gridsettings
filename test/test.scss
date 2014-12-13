@@ -1,33 +1,4 @@
-// Grid Type
-$flexbox-grid: false;
-
-// Breakpoints
-$screen-xs-min: 480px;
-$screen-sm-min: 768px;
-$screen-md-min: 992px;
-$screen-lg-min: 1230px;
-$screen-xs-max: ($screen-sm-min -1);
-$screen-sm-max: ($screen-md-min - 1);
-$screen-md-max: ($screen-lg-min - 1);
-
-// Grid attributes
-$grid-columns: 12;
-$static-col-width: 300px;
-$static-col-name: static;
-$grid-col-name: col-;
-$grid-xs-bp-name: xs-;
-$grid-sm-bp-name: sm-;
-$grid-md-bp-name: md-;
-$grid-lg-bp-name: lg-;
-$grid-push-name: push-;
-$grid-pull-name: pull-;
-$grid-offset-name: offset-;
-$grid-container-name: container;
-$grid-row-name: row;
-$container-sm-width: 750px;
-$container-md-width: 970px;
-$container-lg-width: 1200px;
-
+@import "config";
 @import "../gridsettings";
 
 body {
