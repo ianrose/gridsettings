@@ -14,21 +14,20 @@
 // https://github.com/kristoferjoseph/flexboxgrid
 
 // Grid Type, either flexbox or float based
-$flexbox-grid: true !default;
+$flexbox-grid: false !default;
 
 // Breakpoints TODO - Provide ability to generate any number of breakpoints
 $screen-xs-min: 480px !default;
 $screen-sm-min: 768px !default;
 $screen-md-min: 992px !default;
 $screen-lg-min: 1200px !default;
-$screen-xs-max: ($screen-sm-min -1) !default;
-$screen-sm-max: ($screen-md-min - 1) !default;
-$screen-md-max: ($screen-lg-min - 1) !default;
+$screen-xs-max: ($screen-sm-min -1px) !default;
+$screen-sm-max: ($screen-md-min - 1px) !default;
+$screen-md-max: ($screen-lg-min - 1px) !default;
 
 // Grid attributes
-$grid-gutter: 12px !default;
-$grid-columns: 12 !default;
-$grid-xs-gutter: ($grid-gutter / 2) !default;
+$grid-columns: 8 !default;
+$grid-pad: 16px !default;
 $static-col-width: 300px !default;
 $static-col-name: static !default;
 $grid-col-name: col- !default;
@@ -41,9 +40,38 @@ $grid-pull-name: pull- !default;
 $grid-offset-name: offset- !default;
 $grid-container-name: container !default;
 $grid-row-name: row !default;
+$grid-pad-name: pad- !default;
 $container-sm-width: 750px !default;
 $container-md-width: 970px !default;
 $container-lg-width: 1170px !default;
+
+// String replacement
+@function str-replace($string, $substr, $newsubstr, $all: 0) {
+  $position-found: str-index($string, $substr);
+  $processed: ();
+
+  @while ($position-found and $position-found > 0) {
+    $length-substr: str-length($substr);
+    $processed: append($processed, str-slice($string, 0, $position-found - 1));
+    $processed: append($processed, $newsubstr);
+    $string: str-slice($string, $position-found + $length-substr);
+
+    $position-found: 0;
+
+    @if ($all > 0) {
+      $position-found: str-index($string, $substr);
+    }
+  }
+
+  $processed: append($processed, $string);
+  $string: "";
+
+  @each $s in $processed {
+    $string: #{$string}#{$s};
+  }
+
+  @return $string;
+}
 
 // Clearfix mixin
 @mixin clearfix() {
@@ -58,11 +86,9 @@ $container-lg-width: 1170px !default;
 }
 
 // Centers the "container" on the page and clears floats.
-@mixin make-container($gutter, $flexbox-grid) {
+@mixin make-container($flexbox-grid) {
   margin-right: auto;
   margin-left: auto;
-  padding-left: $gutter / 2;
-  padding-right: $gutter / 2;
   @if ($flexbox-grid == false) {
     @include clearfix();
   }
@@ -71,9 +97,7 @@ $container-lg-width: 1170px !default;
 // Creates a wrapper for a series of columns and with negative margin allows
 // first and last column to be flush left and right of container. Clears
 // "column" floats.
-@mixin make-row($gutter, $flexbox-grid) {
-  margin-left: ($gutter / -2);
-  margin-right: ($gutter / -2);
+@mixin make-row($flexbox-grid) {
   @if ($flexbox-grid) {
     display: -webkit-box;
     display: -webkit-flex;
@@ -100,12 +124,6 @@ $container-lg-width: 1170px !default;
 // Shared rules for all columns
 .col {
   position: relative;
-  padding-left: $grid-xs-gutter / 2;
-  padding-right: $grid-xs-gutter / 2;
-  @media (min-width: $screen-sm-min) {
-    padding-left: $grid-gutter / 2;
-    padding-right: $grid-gutter / 2;
-  }
   @if ($flexbox-grid) {
     display: -webkit-box;
     display: -webkit-flex;
@@ -200,6 +218,15 @@ $container-lg-width: 1170px !default;
   }
 }
 
+// Optional gutter classes baseed on breakpoint
+@mixin make-grid-pad($bp, $pad) {
+  $bp: str-replace($bp, '-', '');
+  .#{$grid-pad-name}#{$bp} {
+    padding-left: $pad;
+    padding-right: $pad;
+  }
+}
+
 // Calculate column classes
 @mixin loop-grid-columns($columns, $bp, $type, $flexbox-grid) {
   @for $i from 0 through $columns {
@@ -208,12 +235,15 @@ $container-lg-width: 1170px !default;
 }
 
 // Make a grid based on breakpoint
-@mixin make-grid($bp, $flexbox-grid) {
+@mixin make-grid($bp, $flexbox-grid, $pad) {
   // Generate width column classes for a breakpoint
   @include loop-grid-columns($grid-columns, $bp, width, $flexbox-grid);
 
   // Float columns for specified breakpoint and up
   @include float-grid-columns($bp, $flexbox-grid);
+
+  // Generate optional gutter classes
+  @include make-grid-pad($bp, $pad);
 
   // Generate push column classes for a breakpoint
   @include loop-grid-columns($grid-columns, $bp, push, $flexbox-grid);
@@ -225,9 +255,9 @@ $container-lg-width: 1170px !default;
   @include loop-grid-columns($grid-columns, $bp, offset, $flexbox-grid);
 }
 
-@mixin make-static-fluid($bp, $gutter) {
+@mixin make-static-fluid($bp) {
   .#{$grid-col-name}#{$bp}#{$static-col-name} {
-    width: $static-col-width + $gutter;
+    width: $static-col-width;
   }
 
   .fluid-#{$bp}wrapper {
@@ -244,24 +274,24 @@ $container-lg-width: 1170px !default;
 
   .static-right {
     .#{$grid-col-name}#{$bp}fluid {
-      margin-right: $static-col-width + $gutter;
+      margin-right: $static-col-width;
 
     }
 
     .#{$grid-col-name}#{$bp}#{$static-col-name} {
       float: left;
-      margin-left: ($static-col-width + $gutter) * -1;
+      margin-left: $static-col-width * -1;
     }
   }
 
   .static-left {
     .#{$grid-col-name}#{$bp}fluid {
-      margin-left: $static-col-width + $gutter;
+      margin-left: $static-col-width;
     }
 
     .#{$grid-col-name}#{$bp}#{$static-col-name} {
       float: right;
-      margin-right: ($static-col-width + $gutter) * -1;
+      margin-right: $static-col-width * -1;
     }
   }
 }
@@ -278,8 +308,8 @@ html {
   box-sizing: inherit;
 }
 
-@include make-grid($grid-xs-bp-name, $flexbox-grid);
-@include make-static-fluid($grid-xs-bp-name, $grid-xs-gutter);
+@include make-grid($grid-xs-bp-name, $flexbox-grid, $grid-pad);
+@include make-static-fluid($grid-xs-bp-name);
 
 @if ($flexbox-grid) {
   .start-xs {
@@ -315,12 +345,11 @@ html {
   .last-xs {
     order: 1;
   }
-
 }
 
 @media (min-width: $screen-sm-min) {
-  @include make-grid($grid-sm-bp-name, $flexbox-grid);
-  @include make-static-fluid($grid-sm-bp-name, $grid-gutter);
+  @include make-grid($grid-sm-bp-name, $flexbox-grid, $grid-pad);
+  @include make-static-fluid($grid-sm-bp-name);
   @if ($flexbox-grid) {
     .start-sm {
       justify-content: flex-start;
@@ -359,8 +388,7 @@ html {
 }
 
 @media (min-width: $screen-md-min) {
-  @include make-grid($grid-md-bp-name, $flexbox-grid);
-  @include make-static-fluid($grid-md-bp-name, $grid-gutter);
+  @include make-grid($grid-md-bp-name, $flexbox-grid, $grid-pad);
   @if ($flexbox-grid) {
     .start-md {
       justify-content: flex-start;
@@ -399,8 +427,7 @@ html {
 }
 
 @media (min-width: $screen-lg-min) {
-  @include make-grid($grid-lg-bp-name, $flexbox-grid);
-  @include make-static-fluid($grid-lg-bp-name, $grid-gutter);
+  @include make-grid($grid-lg-bp-name, $flexbox-grid, $grid-pad);
   @if ($flexbox-grid) {
     .start-lg {
       justify-content: flex-start;
@@ -439,15 +466,15 @@ html {
 }
 
 .#{$grid-container-name}fluid {
-  @include make-container($grid-gutter, $flexbox-grid);
+  @include make-container($flexbox-grid);
 }
 
 .#{$grid-container-name} {
-  @include make-container($grid-xs-gutter, $flexbox-grid);
+  @include make-container($flexbox-grid);
 
   @media (min-width: $screen-sm-min) {
     width: $container-sm-width;
-    @include make-container($grid-gutter, $flexbox-grid);
+    @include make-container($flexbox-grid);
   }
   @media (min-width: $screen-md-min) {
     width: $container-md-width;
@@ -458,9 +485,9 @@ html {
 }
 
 .#{$grid-row-name} {
-  @include make-row($grid-xs-gutter, $flexbox-grid);
+  @include make-row($flexbox-grid);
 
   @media (min-width: $screen-sm-min) {
-    @include make-row($grid-gutter, $flexbox-grid);
+    @include make-row($flexbox-grid);
   }
 }

@@ -4,6 +4,9 @@
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
   <title>Test</title>
   <link rel="stylesheet" href="test.css"/>
+  <!--[if lte IE 9 ]>
+  <link rel="stylesheet" href="test-ie.css"/>
+  <![endif]-->
 </head>
 <body id="top">
   <div class="grid--default">
@@ -103,11 +106,13 @@
       </div>
       <h2>XS Breakpoint</h2>
       <div class="row">
-        <div class="col col-xs-6">
-          <div class="content">col-</div>
+        <div class="col col-xs-6 pad">
+          <div class="pad">
+            <div class="content">col-</div>
+          </div>
         </div>
         <div class="col col-xs-6">
-          <div class="content">col-</div>
+            <div class="content">col-</div>
         </div>
       </div>
       <div class="row">
@@ -431,7 +436,9 @@
       <h2>LG Breakpoint</h2>
       <div class="row">
         <div class="col col-lg-6">
-          <div class="content">col-</div>
+          <div class="pad-md">
+            <div class="content">col-</div>
+          </div>
         </div>
         <div class="col col-lg-6">
           <div class="content">col-</div>
