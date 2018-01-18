@@ -1,3 +1,5 @@
+**Not maintained. Use CSS Grid https://developer.mozilla.org/en-US/docs/Web/CSS/grid**
+
 Gridsettings
 ============
 
