@@ -1,4 +1,4 @@
-**Not maintained. Use CSS Grid https://developer.mozilla.org/en-US/docs/Web/CSS/grid**
+**Not maintained. Use CSS Grid Layout https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout**
 
 Gridsettings
 ============
