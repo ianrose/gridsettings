@@ -86,10 +86,6 @@ The HTML:
 
 Sass, that's it.
 
-## Warning: In Development
-
-Please be aware Gridsettings is still being heavily developed and you will probably come across bugs.
-
 ## Thanks and Resources
 
 * [Bootstrap](https://github.com/twbs/bootstrap-sass)
